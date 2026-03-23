@@ -1,3 +1,9 @@
+## v3.9.3 (2026-03-23)
+
+### Fix
+
+- replace per-chunk tqdm frames bars with single segment progress bar
+
 ## v3.9.2 (2026-03-23)
 
 ### Fix
