@@ -1,3 +1,9 @@
+## v3.10.0 (2026-03-24)
+
+### Feat
+
+- implement mps/mlx for all non-asr models
+
 ## v3.9.3 (2026-03-23)
 
 ### Fix
