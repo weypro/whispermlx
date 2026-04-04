@@ -114,10 +114,27 @@ def load_align_model(
                 model_name, cache_dir=model_dir, local_files_only=model_cache_only
             )
         except Exception as e:
-            print(e)
-            print(
-                "Error loading model from huggingface, check https://huggingface.co/models for finetuned wav2vec2.0 models"
+            err_str = str(e).lower()
+            is_network_err = any(
+                k in err_str
+                for k in (
+                    "max retries",
+                    "connection",
+                    "httpsconnectionpool",
+                    "nodename nor servname",
+                )
             )
+            if is_network_err:
+                logger.warning(
+                    f"{e}\n"
+                    "Failed to reach HuggingFace — if you are offline or behind a firewall, "
+                    "re-run with --model_cache_only to load from local cache."
+                )
+            else:
+                print(e)
+                print(
+                    "Error loading model from huggingface, check https://huggingface.co/models for finetuned wav2vec2.0 models"
+                )
             raise ValueError(
                 f'The chosen align_model "{model_name}" could not be found in huggingface (https://huggingface.co/models) or torchaudio (https://pytorch.org/audio/stable/pipelines.html#id14)'
             ) from e

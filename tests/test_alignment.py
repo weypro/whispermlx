@@ -272,6 +272,27 @@ class TestLoadAlignModel:
         assert metadata["language"] == "ja"
         assert "a" in metadata["dictionary"]
 
+    def test_network_error_warns_about_cache_only_flag(self, mocker):
+        import torchaudio
+
+        import whispermlx.alignment as alignment_module
+        from whispermlx.alignment import load_align_model
+
+        mocker.patch.object(torchaudio.pipelines, "__all__", [])
+        mocker.patch(
+            "whispermlx.alignment.Wav2Vec2Processor.from_pretrained",
+            side_effect=OSError(
+                "MaxRetryError('HTTPSConnectionPool(host='huggingface.co', port=443)')"
+            ),
+        )
+        mock_logger = mocker.patch.object(alignment_module, "logger")
+
+        with pytest.raises(ValueError):
+            load_align_model("tr", "cpu")
+
+        warning_text = " ".join(str(a) for a in mock_logger.warning.call_args[0])
+        assert "--model_cache_only" in warning_text
+
     def test_explicit_model_name_skips_default_lookup(self, mocker):
         """Explicit model_name should bypass default language mapping."""
         import torchaudio
