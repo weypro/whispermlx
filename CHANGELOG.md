@@ -1,3 +1,10 @@
+## v3.11.2 (2026-04-04)
+
+### Fix
+
+- **alignment.py**: give a descriptive error for offline models
+- **tests**: stub mlx on non-Apple-Silicon to unblock Linux CI
+
 ## v3.11.1 (2026-04-02)
 
 ### Fix
